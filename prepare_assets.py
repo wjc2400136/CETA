@@ -2,7 +2,8 @@
 import argparse
 import hashlib
 import json
-from pathlib import Path
+import os
+from pathlib import Path, PurePosixPath
 from urllib.request import urlopen
 import shutil
 import tempfile
@@ -14,10 +15,14 @@ BASE = 'https://raw.githubusercontent.com/RYC-98/SimVLA/29a9ddc5d124ba12e2b5109f
 
 
 def digest(path):
-    h = hashlib.sha256()
     with path.open('rb') as f:
-        for data in iter(lambda:f.read(8*1024*1024),b''):
-            h.update(data)
+        return stream_digest(f)
+
+
+def stream_digest(stream):
+    h = hashlib.sha256()
+    for data in iter(lambda:stream.read(8*1024*1024), b''):
+        h.update(data)
     return h.hexdigest()
 
 
@@ -59,16 +64,34 @@ def install_images(dataset, archive):
     image_root=ROOT/spec['image_root']
 
     def install(name, reader):
-        rel=needed.pop(Path(name).name,None)
+        member = PurePosixPath(name)
+        rel=needed.get(member.name)
         if rel is None: return
+        # Official archives contain the annotated relative path. Also accept
+        # a wrapper directory or a flat archive of the named test images.
+        expected = PurePosixPath(rel)
+        if len(member.parts) > 1 and member.parts[-len(expected.parts):] != expected.parts:
+            return
+        del needed[member.name]
         path=image_root/rel
-        if path.exists(): return
+        if path.is_symlink() or not path.resolve().is_relative_to(image_root.resolve()):
+            raise ValueError('Unsafe destination for test image: '+rel)
+        if path.exists():
+            with reader() as inp:
+                if not path.is_file() or digest(path) != stream_digest(inp):
+                    raise ValueError(f'Existing test image differs from archive member {name}: {rel}')
+            return
         path.parent.mkdir(parents=True,exist_ok=True)
         with tempfile.TemporaryDirectory(dir=path.parent) as tmp:
             temp=Path(tmp)/'image'
             with reader() as inp, temp.open('wb') as out:
                 shutil.copyfileobj(inp,out)
-            temp.replace(path)
+            # Publish the complete image without replacing a concurrently created destination.
+            try:
+                os.link(temp, path)
+            except FileExistsError:
+                if path.is_symlink() or not path.is_file() or digest(path) != digest(temp):
+                    raise ValueError(f'Existing test image differs from archive member {name}: {rel}')
 
     if zipfile.is_zipfile(archive):
         with zipfile.ZipFile(archive) as z:

@@ -37,7 +37,7 @@ python prepare_assets.py splits
 python prepare_assets.py weights
 ```
 
-2. 取得获准使用的原始图像归档，将下列命令中的路径替换为自己的文件位置。Flickr30K 可使用 [固定版本图像归档](https://huggingface.co/datasets/gondimjoaom/flickr30k-trainready/resolve/c3fcb3bd59659d98d3fa17c5eaff538e2f17060d/flickr30k-images.tar.gz)，MSCOCO 使用 [官方 val2014.zip](https://images.cocodataset.org/zips/val2014.zip)。脚本只读取测试标注指定的图像并核对原实验顺序下的文件树哈希。
+2. 取得获准使用的原始图像归档，将下列命令中的路径替换为自己的文件位置。脚本按测试标注选图，将已有图片与归档中的对应文件逐一比对，再按原实验顺序核验文件树哈希。发现冲突时会列出图片路径，可将该文件移到其他位置后重新执行。[Flickr30K 固定版本图像归档](https://huggingface.co/datasets/gondimjoaom/flickr30k-trainready/resolve/c3fcb3bd59659d98d3fa17c5eaff538e2f17060d/flickr30k-images.tar.gz) · [COCO 官方 val2014.zip](https://s3.amazonaws.com/images.cocodataset.org/zips/val2014.zip)
 
 ```bash
 python prepare_assets.py images --dataset flickr30k --archive /path/to/flickr30k-images.tar.gz
@@ -70,6 +70,13 @@ python retrieval.py evaluate --dataset flickr30k --method ceta --source albef --
 python retrieval.py matrix --output runs/full --device cuda:0
 ```
 
+`plan` 与 `matrix` 使用相同的数据集、方法、源和目标筛选条件。省略某一项时，该项取全部值。以下两条命令预览并运行同一组实验，共一次生成、一次目标评估、两个方向的 ASR@1。在同一矩阵目录下改用其他目标时，程序可复用已完成的生成。
+
+```bash
+python retrieval.py plan --dataset flickr30k --method ceta --source albef --target tcl
+python retrieval.py matrix --dataset flickr30k --method ceta --source albef --target tcl --output runs/full
+```
+
 矩阵中每个案例位于 `runs/full/<数据集>/<方法>/<源>/`，单案例则位于传给 `--output` 的目录。`gallery/` 保存无损 PNG，`gallery.json` 保留逐图最终文本，`generation.json` 绑定版本及交付物哈希。每个 `evaluation/<目标>/` 下，`clean.npz` 与 `adversarial.npz` 保存从零计数的 TR/IR 排名。`metrics.json` 的 `clean_hits` 统计原排名 0，`lost_clean_hits` 统计攻击后离开排名 0 的原命中，ASR 等于 100 乘以后者与前者的比值。
 
 ## 方法与口径
@@ -83,6 +90,6 @@ CETA 使用固定的 9×9 箱式滤波、尺度范围 0.50、噪声 8/255、10 �
 ## 恢复与核查
 
 - 文件缺失或哈希不符时，先检查标注相对路径、权重所属数据集、Flickr30K 目录层级及 COCO 年份。下载脚本不会覆盖已存在的错误文件。将该文件移至其他位置再重新下载。
-- 中断后先查案例目录中的 `generation.json`。存在时可用原评估命令继续。完整目标会核对排名/指标文件的哈希并复用。某个目标缺少 `complete.json` 时，将该目标目录改名保留，再重跑它的评估命令。生成中断且没有 `generation.json` 时，另选空目录开始该案例。
+- 中断后先查案例目录中的 `generation.json`。存在时可用原评估命令继续。程序核对生成回执与目标身份、两份排名及指标文件的哈希，再从排名重算 TR/IR 两行指标。上一版已完成的图库也按原生成程序和协议的固定哈希核验。某个目标缺少 `complete.json` 时，将该目标目录改名保留，再重跑它的评估命令。生成中断且没有 `generation.json` 时，另选空目录开始该案例。
 - CUDA OOM 时先释放其他 GPU 作业，或选择显存更大的设备；保留已写出的生成和已完成目标。主表批量、句组、迭代和检索范围应保持协议值。出现 `iJIT_NotifyEvent` 时按本仓库的 Linux YAML 重建环境。
 - 发布核查包括源码/结果清单、元数据命令和攻击模块导入。参考结果来自原实验。公开目录的独立包装入口尚未在新机器上完成 GPU 全矩阵回放。
