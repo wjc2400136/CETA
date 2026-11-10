@@ -1,0 +1,10 @@
+name: tcl
+family: fusion
+image_size: 384
+embed_dim: 256
+vision_width: 768
+bert_config: configs/models/bert-base-uncased.json
+text_encoder: bert-base-uncased
+checkpoints:
+  flickr30k: data/checkpoints/tcl_flickr.pth
+  mscoco: data/checkpoints/tcl_mscoco.pth

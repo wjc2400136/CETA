@@ -1,0 +1,5 @@
+name: clip_rn101
+family: aligned
+openai_name: RN101
+checkpoint: data/checkpoints/clip/RN101.pt
+image_size: 224

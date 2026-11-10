@@ -1,0 +1,31 @@
+name: vlpa
+channels:
+  - https://conda.anaconda.org/pytorch
+  - https://conda.anaconda.org/nvidia
+  - https://repo.anaconda.com/pkgs/main
+dependencies:
+  # Python 3.10.20's current linux-64 build requires zlib >=1.3, while the
+  # pinned torchvision 0.16.2/ffmpeg build requires zlib <1.3.
+  - python=3.10.14
+  - pip=24.2
+  - pytorch=2.1.2
+  - torchvision=0.16.2
+  - pytorch-cuda=12.1
+  # METEOR and the local LanguageTool engine require a JVM.
+  - openjdk=17
+  - numpy=1.26.4
+  # PyTorch 2.1.2 cannot load with MKL 2024.1+ (`iJIT_NotifyEvent`). These
+  # archived, build-pinned defaults packages keep the compatible 2023 runtime;
+  # URL fragments are the package MD5 values recorded by Anaconda.
+  - "https://repo.anaconda.com/pkgs/main/linux-64/mkl-2023.1.0-h213fc3f_46344.conda#83e5adf5b75242d8d7634615fed37c72"
+  - "https://repo.anaconda.com/pkgs/main/linux-64/intel-openmp-2023.1.0-hdb19cb5_46306.conda#8c3c1916f770196bf998c8310178ae55"
+  - "https://repo.anaconda.com/pkgs/main/linux-64/tbb-2021.8.0-hdb19cb5_0.conda#869373905a6bfacbb967abc98516dd85"
+  - "https://repo.anaconda.com/pkgs/main/linux-64/tbb-devel-2021.8.0-hdb19cb5_0.conda#7ef8d1a9d1065802fe0a43c6586946e2"
+
+# Linux compatibility adaptation:
+# environment.yml additionally pins sqlite, OpenSSL, and Intel OpenMP to work
+# around Windows-specific DLL and certificate-store failures. Those pins are
+# deliberately omitted here. The Python patch release is the newest 3.10 build
+# that solves with the pinned 2023 torchvision/ffmpeg packages. The Linux MKL
+# runtime pin fixes an upstream binary-compatibility failure without changing
+# PyTorch, CUDA, NumPy, Transformers, timm, OpenAttack, or attack semantics.

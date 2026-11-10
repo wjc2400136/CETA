@@ -1,0 +1,21 @@
+name: flickr30k
+display_name: Flickr30K
+annotation: data/annotations/flickr30k_test.json
+image_root: data/flickr30k
+# The retrieval test and SNLI-VE intentionally share the canonical 31,783-image
+# Flickr30K tree. Files not referenced by the 1K retrieval split are therefore
+# required shared assets, not retrieval orphans.
+allow_unreferenced_images: true
+expected_total_image_files: 31783
+expected_images: 1000
+expected_captions_per_image: 5
+expected_captions: 5000
+annotation_sha256: 83d2afa5ea44eac66f79cfce6b6ff8813889cfcc2ae52e709b0b3c70514fc7a4
+image_tree_sha256: 19c12be7903cfb56c4505b34641bc817436d7e28b97c8dd9e21604a4582c1df9
+image_archive:
+  url: https://huggingface.co/datasets/gondimjoaom/flickr30k-trainready/resolve/c3fcb3bd59659d98d3fa17c5eaff538e2f17060d/flickr30k-images.tar.gz
+  mirrors:
+    - https://hf-mirror.com/datasets/gondimjoaom/flickr30k-trainready/resolve/c3fcb3bd59659d98d3fa17c5eaff538e2f17060d/flickr30k-images.tar.gz
+  sha256: 051f4ddfa010caf652f74210c9aa34561251a72d00a03b0cb696b21a6d57953c
+  size_bytes: 4375349371
+license_note: Flickr images remain subject to Flickr terms and non-commercial research use.

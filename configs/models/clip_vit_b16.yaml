@@ -1,0 +1,5 @@
+name: clip_vit_b16
+family: aligned
+openai_name: ViT-B/16
+checkpoint: data/checkpoints/clip/ViT-B-16.pt
+image_size: 224

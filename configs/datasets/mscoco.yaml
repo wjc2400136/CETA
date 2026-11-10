@@ -1,0 +1,19 @@
+name: mscoco
+display_name: MSCOCO Karpathy test
+annotation: data/annotations/coco_test.json
+image_root: data/mscoco
+expected_images: 5000
+expected_captions_per_image: [5, 6]
+expected_captions: 25010
+# These exact duplicate captions are present in the canonical Karpathy test
+# annotation. They are pinned as source-data edge cases, not silently removed.
+expected_duplicate_caption_images:
+  - val2014/COCO_val2014_000000026654.jpg
+  - val2014/COCO_val2014_000000157726.jpg
+  - val2014/COCO_val2014_000000237814.jpg
+  - val2014/COCO_val2014_000000441453.jpg
+  - val2014/COCO_val2014_000000506458.jpg
+  - val2014/COCO_val2014_000000576369.jpg
+annotation_sha256: 5b202a235ee2a4e13f82b984ef9293b8e2d34f9b1f92147bf8340580f20faf15
+image_tree_sha256: 3f4415fc6b39062bd1e3c85d6aa959e427a409fdcf4cf596e7a8c5b35a2443c5
+license_note: Images and annotations are governed by the MSCOCO terms and source licenses.

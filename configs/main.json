@@ -1,0 +1,57 @@
+{
+  "methods": [
+    "pgd",
+    "bert_attack",
+    "sep_attack",
+    "co_attack",
+    "sga",
+    "dra",
+    "sa_aet",
+    "simvla",
+    "sadca",
+    "ceta"
+  ],
+  "models": [
+    "albef",
+    "tcl",
+    "clip_vit_b16",
+    "clip_rn101"
+  ],
+  "datasets": {
+    "flickr30k": {
+      "images": 1000,
+      "captions": 5000,
+      "annotation": "data/annotations/flickr30k_test.json",
+      "image_root": "data/flickr30k",
+      "annotation_sha256": "83d2afa5ea44eac66f79cfce6b6ff8813889cfcc2ae52e709b0b3c70514fc7a4",
+      "ordered_test_tree_sha256": "a4aab35271f7a6d12c262325b5abc26426b3738a6f27504ec370b801826a1c06"
+    },
+    "mscoco": {
+      "images": 5000,
+      "captions": 25010,
+      "annotation": "data/annotations/coco_test.json",
+      "image_root": "data/mscoco",
+      "annotation_sha256": "5b202a235ee2a4e13f82b984ef9293b8e2d34f9b1f92147bf8340580f20faf15",
+      "ordered_test_tree_sha256": "ffc94bf48062ff9aedc7751cecd23dd34f279b2c55aa3509c465d9aa06d14b1c"
+    }
+  },
+  "budget": {
+    "epsilon": 0.00784313725490196,
+    "step_size": 0.00196078431372549,
+    "steps": 10,
+    "num_perturb": 1,
+    "max_length": 30,
+    "topk": 10,
+    "threshold": 0.3
+  },
+  "seed": 42,
+  "generation_batch": 4,
+  "evaluation_batch": 8,
+  "ceta_recipe": "BOX9_A0p50_S8_255",
+  "sadca_schedule": {
+    "alignment": 5,
+    "rounds": 2,
+    "updates_per_round": 5
+  },
+  "reference_sha256": "b0771707f285d03e9ee49e7940c0f29c0039b86dcf612a33845d051bd697dd96"
+}
