@@ -8,11 +8,9 @@ This public release covers the ten-method main retrieval comparison. The institu
 
 ## Read the reference results
 
-With Git and Python 3.10 or 3.11 installed, open a terminal and run
+Open a terminal in the directory containing `retrieval.py` and run the following commands with Python 3.10 or 3.11.
 
 ```bash
-git clone https://github.com/wjc2400136/CETA.git
-cd CETA
 python retrieval.py plan
 python retrieval.py reference
 ```

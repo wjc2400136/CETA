@@ -8,11 +8,9 @@
 
 ## 先查看结果
 
-安装 Git 和 Python 3.10 或 3.11。在终端依次执行以下命令。此步只读取仓库中的文件。
+在包含 `retrieval.py` 的目录打开终端，用 Python 3.10 或 3.11 依次运行以下两条命令。这一步只读取仓库中的文件。
 
 ```bash
-git clone https://github.com/wjc2400136/CETA.git
-cd CETA
 python retrieval.py plan
 python retrieval.py reference
 ```
