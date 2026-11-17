@@ -4,6 +4,8 @@
 
 Each attack generates one image and its group of final captions per source image. The same delivery is evaluated on four target models. Text retrieval (TR) queries the caption gallery with an image. Image retrieval (IR) queries the image gallery with a caption.
 
+This public release covers the ten-method main retrieval comparison. The institutional project separately covers the paper's cross-task, multimodal-judgment, defense, ablation, seed and cost studies. All environments, input manifests and commands here serve the public main experiment.
+
 ## Read the reference results
 
 With Git and Python 3.10 or 3.11 installed, open a terminal and run
@@ -21,14 +23,19 @@ The reader checks the source/configuration digests, the reference CSV digest, th
 
 Use Linux x86-64 with Conda and an NVIDIA driver compatible with CUDA 12.1. Python 3.10.14, PyTorch 2.1.2, torchvision 0.16.2, NumPy 1.26.4, Transformers 4.28.1 and the pinned MKL packages match the retrieval stack. Run the following from the repository root.
 
+The reference reader also works with ordinary Python on Windows or macOS. For numerical execution, use Linux; Windows users can use WSL2 with NVIDIA GPU support configured. Install Git and Miniconda or Anaconda, and check that `git --version`, `conda --version` and `nvidia-smi` work in the terminal. Create the environment once. In each new terminal, enter the repository and activate `vlpa` again.
+
 ```bash
 conda env create -f environment-linux.yml
 conda activate vlpa
 python -m pip install -r requirements.txt
 python -m pip check
+python -c "import torch; print(torch.__version__); print('CUDA available:', torch.cuda.is_available())"
 python prepare_assets.py splits
 python prepare_assets.py weights
 ```
+
+The environment check should report PyTorch 2.1.2 and an available CUDA device before generation. Resolve driver or environment failures first. Reading the saved reference table does not test the GPU environment.
 
 For one dataset, add `--dataset flickr30k` or `--dataset mscoco` to both preparation commands. The two public Karpathy test annotations come from a fixed SimVLA commit. Flickr30K line endings are restored to the byte representation used in the original run. The weight manifest lists immutable checkpoint digests, byte counts, fetch locations, the BERT tokenizer and its masked language model. [Asset manifest](configs/assets.json)
 

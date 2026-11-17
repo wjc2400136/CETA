@@ -4,6 +4,8 @@
 
 公开版覆盖 Flickr30K、MSCOCO 上的主检索表。每种方法在四个源模型上分别生成攻击样本，每份样本都交给四个目标模型。TR 是用图检索文本，IR 是用文本检索图像。两种方向分别按干净检索命中数计算 ASR@1。
 
+本仓库的发布范围是这套十方法主检索实验。论文中的跨任务、多模态模型判断、防御、消融、多随机种子和成本研究由学院工程提供；这里的环境、输入清单和命令均围绕公开主实验组织。
+
 ## 先查看结果
 
 安装 Git 和 Python 3.10 或 3.11。在终端依次执行以下命令。此步只读取仓库中的文件。
@@ -21,12 +23,17 @@ python retrieval.py reference
 
 数值实验使用 Linux x86-64、Miniconda 或 Anaconda，以及支持 CUDA 12.1 的 NVIDIA 驱动。在仓库根目录执行。Python 3.10.14、PyTorch 2.1.2、torchvision 0.16.2、NumPy 1.26.4 和 Transformers 4.28.1 对应原检索环境。环境文件固定了兼容旧版 PyTorch 的 MKL 运行库。
 
+仅查看随库结果可以使用 Windows、macOS 或 Linux 的普通 Python。运行模型请使用 Linux；Windows 用户可在配置好 NVIDIA GPU 支持的 WSL2 中运行。先安装 Git 和 Conda，在终端确认 `git --version`、`conda --version` 与 `nvidia-smi` 可用。以下环境只需创建一次；重新打开终端时，从仓库目录执行 `conda activate vlpa`。
+
 ```bash
 conda env create -f environment-linux.yml
 conda activate vlpa
 python -m pip install -r requirements.txt
 python -m pip check
+python -c "import torch; print(torch.__version__); print('CUDA available:', torch.cuda.is_available())"
 ```
+
+最后一行应显示 PyTorch 2.1.2，并且 CUDA available 为 True，随后再准备输入和运行生成。检查失败时先处理驱动或环境问题；CPU 上读取参考表通过不代表 GPU 环境已经可运行。
 
 ## 准备输入
 
