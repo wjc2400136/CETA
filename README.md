@@ -1,6 +1,6 @@
 # CETA
 
-**Candidate Enumeration for Text-Guided Attacks** · Image–text retrieval
+**Beyond Word Importance: Candidate Enumeration for Transferable Vision-Language Attacks** · Image–text retrieval
 
 [中文复现指南](README.zh-CN.md) · [English reproduction guide](README.en.md) · [Reference ASR@1](reference/main_retrieval_r1.csv)
 
